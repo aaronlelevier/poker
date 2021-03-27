@@ -4,11 +4,17 @@
 %%% @end
 %%% Created : 27. Mar 2021 8:12 AM
 %%%-------------------------------------------------------------------
--module(cards).
+-module(card).
 -author("Aaron Lelevier").
 -vsn(1.0).
 -export([]).
 -compile(export_all).
+
+
+%% @doc Returns a Poker Hand
+-spec hand(binary(), binary()) -> [binary()].
+hand(Card1, Card2) ->
+  [Card1, Card2].
 
 
 %% @doc Returns the 'Card' rank
@@ -25,6 +31,12 @@ suit(Card) ->
   binary:part(Card, {1, 1}).
 
 
+%% @doc Returns a random 'Card' from the list of 'Cards'
+-spec random_card([binary()]) -> binary().
+random_card(Cards) ->
+  lists:nth(rand:uniform(length(Cards)), Cards).
+
+
 %% @doc Returns all possible 'Card's
 -spec all() -> [binary()].
 all() -> [
@@ -32,10 +44,6 @@ all() -> [
   <<"Ah">>,
   <<"Ad">>,
   <<"Ac">>,
-  <<"1s">>,
-  <<"1h">>,
-  <<"1d">>,
-  <<"1c">>,
   <<"2s">>,
   <<"2h">>,
   <<"2d">>,
