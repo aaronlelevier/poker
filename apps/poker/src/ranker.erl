@@ -25,6 +25,10 @@ has_4_of_a_kind(Cards) ->
   has_N_of_a_kind(Sorted, 4, length(Sorted)).
 
 
+has_full_house(Cards) ->
+  has_3_of_a_kind(Cards) andalso has_pair(Cards).
+
+
 -spec has_3_of_a_kind(cards()) -> boolean().
 has_3_of_a_kind(Cards) ->
   Sorted = desc_rank_values(Cards),

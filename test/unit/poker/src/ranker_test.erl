@@ -31,6 +31,48 @@ has_4_of_a_kind_false_test() ->
   ?assertNot(ranker:has_4_of_a_kind(Cards)).
 
 
+has_full_house_true_test() ->
+  % AAAQQ
+  Cards = [
+    <<"Ah">>,
+    <<"Ad">>,
+    <<"Ac">>,
+    <<"2c">>,
+    <<"Qs">>,
+    <<"Qh">>,
+    <<"3h">>
+  ],
+  ?assert(ranker:has_full_house(Cards)).
+
+
+has_full_house_false_test() ->
+  %% AAQQ only, no full house
+  Cards = [
+    <<"3h">>,
+    <<"Kd">>,
+    <<"Ac">>,
+    <<"As">>,
+    <<"Qh">>,
+    <<"2h">>,
+    <<"Qs">>
+  ],
+  ?assertNot(ranker:has_full_house(Cards)).
+
+
+has_full_house_false_3_of_a_kind_only_test() ->
+  %% AAA only, no full house
+  Cards = [
+    <<"3h">>,
+    <<"Kd">>,
+    <<"Ac">>,
+    <<"As">>,
+    <<"Ah">>,
+    <<"2h">>,
+    <<"Qs">>
+  ],
+  ?assertNot(ranker:has_full_house(Cards)).
+
+
 has_3_of_a_kind_true_test() ->
   Cards = [
     <<"Ah">>,
