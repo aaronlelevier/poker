@@ -31,28 +31,26 @@ has_3_of_a_kind(Cards) ->
   has_N_of_a_kind(Sorted, 3, length(Sorted)).
 
 
+-spec has_two_pair(cards()) -> boolean().
+has_two_pair(Cards) ->
+  Sorted = desc_rank_values(Cards),
+  has_two_pair(Sorted, []).
+
+has_two_pair(L, Acc) when length(L) == 1 ->
+  lists:all(fun(X) -> X == true end, Acc) andalso length(Acc) == 2;
+has_two_pair([A,B|T], Acc) ->
+  case A == B of
+    true ->
+      has_two_pair(T, [true|Acc]);
+    false ->
+      has_two_pair([B|T], Acc)
+  end.
+
+
 -spec has_pair(cards()) -> boolean().
 has_pair(Cards) ->
   Sorted = desc_rank_values(Cards),
   has_N_of_a_kind(Sorted, 2, length(Sorted)).
-
-
-%% @doc Returns bool if 'N' consecutive values in a sorted list 'L' are the same
-has_N_of_a_kind(_L, N, X) when N - 1 == X ->
-  false;
-has_N_of_a_kind(L0, N, Size) ->
-  L = lists:sublist(L0, 1, N),
-  H = lists:nth(1, L),
-  IsMatch = lists:all(fun(X) -> X =:= H end, L),
-  lager:debug("L:~w L0:~w, N:~p, Size:~p IsMatch:~p", [L, L0, N, Size-1, IsMatch]),
-  case IsMatch of
-    true ->
-      true;
-    _ ->
-      L2 = lists:sublist(L0, 2, Size),
-      lager:debug("L:~w, L2:~w, N:~p, Size:~p", [L0, L2, N, Size-1]),
-      has_N_of_a_kind(lists:sublist(L0, 2, Size), N, Size - 1)
-  end.
 
 
 -spec has_flush(cards()) -> boolean().
@@ -93,3 +91,21 @@ has_straight(L, Size) ->
 desc_rank_values(Cards) ->
   RankValues = [card:rank_value(C) || C <- Cards],
   lists:reverse(lists:sort(RankValues)).
+
+
+%% @doc Returns bool if 'N' consecutive values in a sorted list 'L' are the same
+has_N_of_a_kind(_L, N, X) when N - 1 == X ->
+  false;
+has_N_of_a_kind(L0, N, Size) ->
+  L = lists:sublist(L0, 1, N),
+  H = lists:nth(1, L),
+  IsMatch = lists:all(fun(X) -> X =:= H end, L),
+  lager:debug("L:~w L0:~w, N:~p, Size:~p IsMatch:~p", [L, L0, N, Size-1, IsMatch]),
+  case IsMatch of
+    true ->
+      true;
+    _ ->
+      L2 = lists:sublist(L0, 2, Size),
+      lager:debug("L:~w, L2:~w, N:~p, Size:~p", [L0, L2, N, Size-1]),
+      has_N_of_a_kind(lists:sublist(L0, 2, Size), N, Size - 1)
+  end.

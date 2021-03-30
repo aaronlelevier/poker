@@ -60,6 +60,30 @@ has_pair_true_test() ->
   ?assert(ranker:has_pair(Cards)).
 
 
+has_two_pair_true_test() ->
+  Cards = [
+    <<"Kh">>,
+    <<"Th">>,
+    <<"Kd">>,
+    <<"Ac">>,
+    <<"Ac">>,
+    <<"2c">>
+  ],
+  ?assert(ranker:has_two_pair(Cards)).
+
+
+has_two_pair_false_test() ->
+  Cards = [
+    <<"Kh">>,
+    <<"Th">>,
+    <<"Qd">>,
+    <<"Ac">>, % pair but NO two pair
+    <<"Ac">>,
+    <<"2c">>
+  ],
+  ?assertNot(ranker:has_two_pair(Cards)).
+
+
 has_pair_false_test() ->
   Cards = [
     <<"Kh">>,
