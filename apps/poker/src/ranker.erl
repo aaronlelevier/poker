@@ -9,6 +9,7 @@
 -module(ranker).
 -author("Aaron Lelevier").
 -vsn(1.0).
+-include("poker.hrl").
 -export([]).
 -compile(export_all).
 
@@ -18,10 +19,31 @@
 rank(Cards) -> Cards.
 
 
--spec has_flush([binary()]) -> boolean().
+-spec has_4_of_a_kind(cards()) -> boolean().
+has_4_of_a_kind(Cards) ->
+  Sorted = desc_rank_values(Cards),
+  has_4_of_a_kind(Sorted, length(Sorted)).
+
+has_4_of_a_kind(_L, 3) ->
+  false;
+has_4_of_a_kind(L0, Size) ->
+  L = lists:sublist(L0, 1, 4),
+  H = lists:nth(1, L),
+  case lists:all(fun(X) -> X =:= H end, L) of
+    true ->
+      true;
+    _ ->
+      has_4_of_a_kind(lists:sublist(L, 2, Size), Size-1)
+  end.
+
+
+-spec has_flush(cards()) -> boolean().
 has_flush(Cards) ->
   M = #{
-    "h" => 0, "d" => 0, "c" => 0, "s" => 0
+    <<"h">> => 0,
+    <<"d">> => 0,
+    <<"c">> => 0,
+    <<"s">> => 0
   },
   has_flush(Cards, M).
 
@@ -32,18 +54,24 @@ has_flush([Card|T], M) ->
   has_flush(T, M#{Suit := maps:get(Suit, M) + 1}).
 
 
--spec has_straight([binary()]) -> boolean().
+-spec has_straight(cards()) -> boolean().
 has_straight(Cards) ->
-  RankValues = [card:rank_value(C) || C <- Cards],
-  Sorted = lists:sort(RankValues),
+  Sorted = desc_rank_values(Cards),
   has_straight(Sorted, length(Sorted)).
 
 has_straight(_, 4) ->
   false;
 has_straight(L, Size) ->
-  case lists:nth(Size, L) - lists:nth(Size-4, L) == 4 of
+  case lists:nth(Size, L) - lists:nth(Size-4, L) == -4 of
     true ->
       true;
     _ ->
       has_straight(L, Size-1)
   end.
+
+%%%===================================================================
+%%% Internal functions
+%%%===================================================================
+desc_rank_values(Cards) ->
+  RankValues = [card:rank_value(C) || C <- Cards],
+  lists:reverse(lists:sort(RankValues)).

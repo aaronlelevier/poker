@@ -21,7 +21,7 @@ hand(Card1, Card2) ->
 %% ex: Card <<"As">> returns <<"A">>
 -spec rank(binary()) -> binary().
 rank(Card) ->
-  binary_to_list(binary:part(Card, {0, 1})).
+  binary:part(Card, {0, 1}).
 
 
 %% @doc Returns the integer value of the Card rank
@@ -34,19 +34,19 @@ rank_value(Card) ->
 -spec rank_value_map() -> #{string() => integer()}.
 rank_value_map() ->
   #{
-    "2" => 2,
-    "3" => 3,
-    "4" => 4,
-    "5" => 5,
-    "6" => 6,
-    "7" => 7,
-    "8" => 8,
-    "9" => 9,
-    "T" => 10,
-    "J" => 11,
-    "Q" => 12,
-    "K" => 13,
-    "A" => 14
+    <<"2">> => 2,
+    <<"3">> => 3,
+    <<"4">> => 4,
+    <<"5">> => 5,
+    <<"6">> => 6,
+    <<"7">> => 7,
+    <<"8">> => 8,
+    <<"9">> => 9,
+    <<"T">> => 10,
+    <<"J">> => 11,
+    <<"Q">> => 12,
+    <<"K">> => 13,
+    <<"A">> => 14
   }.
 
 
@@ -54,7 +54,7 @@ rank_value_map() ->
 %% ex: Card <<"As">> returns <<"s">>
 -spec suit(binary()) -> binary().
 suit(Card) ->
-  binary_to_list(binary:part(Card, {1, 1})).
+  binary:part(Card, {1, 1}).
 
 
 %% @doc Returns a random 'Card' from the default list of all 'Cards'
