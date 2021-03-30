@@ -31,6 +31,46 @@ has_4_of_a_kind_false_test() ->
   ?assertNot(ranker:has_4_of_a_kind(Cards)).
 
 
+has_3_of_a_kind_true_test() ->
+  Cards = [
+    <<"Ah">>,
+    <<"Ad">>,
+    <<"Ac">>
+  ],
+  ?assert(ranker:has_3_of_a_kind(Cards)).
+
+
+has_3_of_a_kind_false_test() ->
+  Cards = [
+    <<"Ah">>,
+    <<"Td">>,
+    <<"Ac">>
+  ],
+  ?assertNot(ranker:has_3_of_a_kind(Cards)).
+
+
+has_pair_true_test() ->
+  Cards = [
+    <<"Kh">>,
+    <<"Td">>,
+    <<"Ac">>,
+    <<"Ac">>,
+    <<"2c">>
+  ],
+  ?assert(ranker:has_pair(Cards)).
+
+
+has_pair_false_test() ->
+  Cards = [
+    <<"Kh">>,
+    <<"Td">>,
+    <<"Ac">>,
+    <<"3c">>,
+    <<"2c">>
+  ],
+  ?assertNot(ranker:has_pair(Cards)).
+
+
 has_flush_true_test() ->
   Cards = [
     <<"Ah">>,

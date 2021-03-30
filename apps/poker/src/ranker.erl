@@ -22,18 +22,36 @@ rank(Cards) -> Cards.
 -spec has_4_of_a_kind(cards()) -> boolean().
 has_4_of_a_kind(Cards) ->
   Sorted = desc_rank_values(Cards),
-  has_4_of_a_kind(Sorted, length(Sorted)).
+  has_N_of_a_kind(Sorted, 4, length(Sorted)).
 
-has_4_of_a_kind(_L, 3) ->
+
+-spec has_3_of_a_kind(cards()) -> boolean().
+has_3_of_a_kind(Cards) ->
+  Sorted = desc_rank_values(Cards),
+  has_N_of_a_kind(Sorted, 3, length(Sorted)).
+
+
+-spec has_pair(cards()) -> boolean().
+has_pair(Cards) ->
+  Sorted = desc_rank_values(Cards),
+  has_N_of_a_kind(Sorted, 2, length(Sorted)).
+
+
+%% @doc Returns bool if 'N' consecutive values in a sorted list 'L' are the same
+has_N_of_a_kind(_L, N, X) when N - 1 == X ->
   false;
-has_4_of_a_kind(L0, Size) ->
-  L = lists:sublist(L0, 1, 4),
+has_N_of_a_kind(L0, N, Size) ->
+  L = lists:sublist(L0, 1, N),
   H = lists:nth(1, L),
-  case lists:all(fun(X) -> X =:= H end, L) of
+  IsMatch = lists:all(fun(X) -> X =:= H end, L),
+  lager:debug("L:~w L0:~w, N:~p, Size:~p IsMatch:~p", [L, L0, N, Size-1, IsMatch]),
+  case IsMatch of
     true ->
       true;
     _ ->
-      has_4_of_a_kind(lists:sublist(L, 2, Size), Size-1)
+      L2 = lists:sublist(L0, 2, Size),
+      lager:debug("L:~w, L2:~w, N:~p, Size:~p", [L0, L2, N, Size-1]),
+      has_N_of_a_kind(lists:sublist(L0, 2, Size), N, Size - 1)
   end.
 
 
@@ -48,8 +66,8 @@ has_flush(Cards) ->
   has_flush(Cards, M).
 
 has_flush([], M) ->
-  length(lists:filter(fun({_K,V}) -> V == 5 end, maps:to_list(M))) > 0;
-has_flush([Card|T], M) ->
+  length(lists:filter(fun({_K, V}) -> V == 5 end, maps:to_list(M))) > 0;
+has_flush([Card | T], M) ->
   Suit = card:suit(Card),
   has_flush(T, M#{Suit := maps:get(Suit, M) + 1}).
 
@@ -62,11 +80,11 @@ has_straight(Cards) ->
 has_straight(_, 4) ->
   false;
 has_straight(L, Size) ->
-  case lists:nth(Size, L) - lists:nth(Size-4, L) == -4 of
+  case lists:nth(Size, L) - lists:nth(Size - 4, L) == -4 of
     true ->
       true;
     _ ->
-      has_straight(L, Size-1)
+      has_straight(L, Size - 1)
   end.
 
 %%%===================================================================
