@@ -27,12 +27,12 @@ rank(Card) ->
 %% @doc Returns the integer value of the Card rank
 -spec rank_value(binary()) -> integer().
 rank_value(Card) ->
-  maps:get(rank(Card), rank_value_map()).
+  maps:get(rank(Card), rank_to_value_map()).
 
 
 %% @doc A mapping from the Card rank to integer values
--spec rank_value_map() -> #{string() => integer()}.
-rank_value_map() ->
+-spec rank_to_value_map() -> #{string() => integer()}.
+rank_to_value_map() ->
   #{
     <<"2">> => 2,
     <<"3">> => 3,
@@ -49,6 +49,24 @@ rank_value_map() ->
     <<"A">> => 14
   }.
 
+%% @doc A mapping from integer values to Card rank
+-spec value_to_rank_map() -> #{string() => integer()}.
+value_to_rank_map() ->
+  #{
+    2 => <<"2">>,
+    3 => <<"3">>,
+    4 => <<"4">>,
+    5 => <<"5">>,
+    6 => <<"6">>,
+    7 => <<"7">>,
+    8 => <<"8">>,
+    9 => <<"9">>,
+    10 => <<"T">>,
+    11 => <<"J">>,
+    12 => <<"Q">>,
+    13 => <<"K">>,
+    14 => <<"A">>
+  }.
 
 %% @doc Returns the 'Card' suit
 %% ex: Card <<"As">> returns <<"s">>

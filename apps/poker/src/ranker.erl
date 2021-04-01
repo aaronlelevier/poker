@@ -13,17 +13,35 @@
 -export([]).
 -compile(export_all).
 
+-spec rank(cards()) -> boolean().
+rank(Cards) ->
+  M = #{
+    all_cards => Cards
+  },
+  case has_4_of_a_kind(Cards) of
+    {true, RankCards} ->
+      M#{
+        rank => four_of_a_kind,
+        rank_cards => RankCards
+      };
+    _ ->
+      M
+  end.
 
-%% @doc Returns the hand name, and the best 5 cards from the
-%% list that make up the Hand
-rank(Cards) -> Cards.
-
-
--spec has_4_of_a_kind(cards()) -> boolean().
+-spec has_4_of_a_kind(cards()) -> {boolean(), #hand{}}.
 has_4_of_a_kind(Cards) ->
   Sorted = desc_rank_values(Cards),
-  has_N_of_a_kind(Sorted, 4, length(Sorted)).
+  {IsExpectedHand, HandCards} = has_N_of_a_kind(Sorted, 4, length(Sorted)),
+  Hand = #hand{
+    rank = rank_or_undefined(IsExpectedHand, four_of_a_kind)
+  },
+  {IsExpectedHand, Hand}.
 
+
+rank_or_undefined(Bool, Rank) ->
+  if Bool -> Rank;
+     true -> undefined
+  end.
 
 has_full_house(Cards) ->
   has_3_of_a_kind(Cards) andalso has_pair(Cards).
@@ -98,8 +116,9 @@ desc_rank_values(Cards) ->
 
 
 %% @doc Returns bool if 'N' consecutive values in a sorted list 'L' are the same
-has_N_of_a_kind(_L, N, X) when N - 1 == X ->
-  false;
+%% 'Size' dictates the remaining card size that can be checked
+has_N_of_a_kind(L, N, Size) when N - 1 == Size ->
+  {false, L};
 has_N_of_a_kind(L0, N, Size) ->
   L = lists:sublist(L0, 1, N),
   H = lists:nth(1, L),
@@ -107,7 +126,7 @@ has_N_of_a_kind(L0, N, Size) ->
   lager:debug("L:~w L0:~w, N:~p, Size:~p IsMatch:~p", [L, L0, N, Size-1, IsMatch]),
   case IsMatch of
     true ->
-      true;
+      {true, L};
     _ ->
       L2 = lists:sublist(L0, 2, Size),
       lager:debug("L:~w, L2:~w, N:~p, Size:~p", [L0, L2, N, Size-1]),

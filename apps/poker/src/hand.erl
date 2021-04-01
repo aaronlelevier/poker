@@ -2,14 +2,15 @@
 %%% @author Aaron Lelevier
 %%% @doc
 %%% @end
-%%% Created : 30. Mar 2021 5:06 AM
+%%% Created : 01. Apr 2021 7:59 AM
 %%%-------------------------------------------------------------------
+-module(hand).
 -author("Aaron Lelevier").
+-vsn(1.0).
+-include("poker.hrl").
+-export([
+  rank/1
+]).
 
--type card() :: binary().
-
--type cards() :: [card()].
-
--record(hand, {
-  rank
-}).
+rank(Hand = #hand{}) ->
+  Hand#hand.rank.
