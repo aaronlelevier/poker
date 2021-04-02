@@ -53,6 +53,17 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 deal_card0(#{cards := Cards}) ->
-  Card = card:random_card(Cards),
+  Card = random_card(Cards),
   Remaining = lists:delete(Card, Cards),
   {Card, #{cards => Remaining}}.
+
+
+%% @doc Returns a random 'Card' from the default list of all 'Cards'
+-spec random_card() -> binary().
+random_card() -> random_card(card:all()).
+
+
+%% @doc Returns a random 'Card' from the list of 'Cards'
+-spec random_card([binary()]) -> binary().
+random_card(Cards) ->
+  lists:nth(rand:uniform(length(Cards)), Cards).

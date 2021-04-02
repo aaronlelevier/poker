@@ -72,17 +72,6 @@ rank_to_value_map() ->
   }.
 
 
-%% @doc Returns a random 'Card' from the default list of all 'Cards'
--spec random_card() -> binary().
-random_card() -> random_card(all()).
-
-
-%% @doc Returns a random 'Card' from the list of 'Cards'
--spec random_card([binary()]) -> binary().
-random_card(Cards) ->
-  lists:nth(rand:uniform(length(Cards)), Cards).
-
-
 %% @doc Returns all possible 'Card's
 -spec all() -> [binary()].
 all() -> [
