@@ -13,6 +13,10 @@
 -export([]).
 -compile(export_all).
 
+%%%===================================================================
+%%% API
+%%%===================================================================
+
 -spec rank(cards()) -> boolean().
 rank(Cards) ->
   M = #{
@@ -28,6 +32,36 @@ rank(Cards) ->
       M
   end.
 
+%% @doc Returns the Cards that make up the hand rank only
+rank_cards(Cards) -> Cards.
+
+%% @doc Returns the best 5 Cards that make up the poker hand
+cards(Cards) -> Cards.
+
+
+%%%===================================================================
+%% v1
+%%%===================================================================
+
+-spec has_flush(cards()) -> {boolean(), flush | undefined}.
+has_flush(Cards) ->
+  % initialize the count of cards per suit at 0
+  M = #{
+    <<"h">> => 0,
+    <<"d">> => 0,
+    <<"c">> => 0,
+    <<"s">> => 0
+  },
+  rank_or_undefined(
+    has_flush(Cards, M), flush).
+
+has_flush([], M) ->
+  length(lists:filter(fun({_K, V}) -> V == 5 end, maps:to_list(M))) > 0;
+has_flush([Card | T], M) ->
+  Suit = card:suit(Card),
+  has_flush(T, M#{Suit := maps:get(Suit, M) + 1}).
+
+
 -spec has_4_of_a_kind(cards()) -> {boolean(), #hand{}}.
 has_4_of_a_kind(Cards) ->
   Sorted = desc_rank_values(Cards),
@@ -39,8 +73,8 @@ has_4_of_a_kind(Cards) ->
 
 
 rank_or_undefined(Bool, Rank) ->
-  if Bool -> Rank;
-     true -> undefined
+  if Bool -> {true, Rank};
+     true -> {false, undefined}
   end.
 
 has_full_house(Cards) ->
@@ -73,23 +107,6 @@ has_two_pair([A,B|T], Acc) ->
 has_pair(Cards) ->
   Sorted = desc_rank_values(Cards),
   has_N_of_a_kind(Sorted, 2, length(Sorted)).
-
-
--spec has_flush(cards()) -> boolean().
-has_flush(Cards) ->
-  M = #{
-    <<"h">> => 0,
-    <<"d">> => 0,
-    <<"c">> => 0,
-    <<"s">> => 0
-  },
-  has_flush(Cards, M).
-
-has_flush([], M) ->
-  length(lists:filter(fun({_K, V}) -> V == 5 end, maps:to_list(M))) > 0;
-has_flush([Card | T], M) ->
-  Suit = card:suit(Card),
-  has_flush(T, M#{Suit := maps:get(Suit, M) + 1}).
 
 
 -spec has_straight(cards()) -> boolean().

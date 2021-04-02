@@ -11,7 +11,15 @@
 -type cards() :: [card()].
 
 -record(hand, {
-  rank
+  % enum - one of the possible hands in poker. i.e. flush, full_house, two_pair, ...
+  rank,
+  % the cards that make up the 'rank' only, so for a 'pair' this is 2 cards
+  rank_cards,
+  % the 5 best cards that make up the poker hand
+  cards,
+  % up to the 7 max cards available if NL Holdem for example that the player
+  % has available to them
+  all_cards
 }).
 
 -record(card, {

@@ -8,6 +8,35 @@
 -author("Aaron Lelevier").
 -include_lib("eunit/include/eunit.hrl").
 
+has_flush_true_test() ->
+  Cards = [
+    <<"Ah">>,
+    <<"2h">>,
+    <<"5h">>,
+    <<"Kh">>,
+    <<"Qh">>
+  ],
+
+  {IsFlush, HandName} = ranker:has_flush(Cards),
+
+  ?assertEqual(true, IsFlush),
+  ?assertEqual(flush, HandName).
+
+
+has_flush_false_test() ->
+  Cards = [
+    <<"Ah">>,
+    <<"2d">>, % not a heart
+    <<"5h">>,
+    <<"Kh">>,
+    <<"Qh">>
+  ],
+
+  {IsFlush, HandName} = ranker:has_flush(Cards),
+
+  ?assertEqual(false, IsFlush),
+  ?assertEqual(undefined, HandName).
+
 
 %%has_4_of_a_kind_true_test() ->
 %%  Cards = [
@@ -185,26 +214,7 @@
 %%  ?assertNot(ranker:has_pair(Cards)).
 %%
 %%
-%%has_flush_true_test() ->
-%%  Cards = [
-%%    <<"Ah">>,
-%%    <<"2h">>,
-%%    <<"5h">>,
-%%    <<"Kh">>,
-%%    <<"Qh">>
-%%  ],
-%%  ?assert(ranker:has_flush(Cards)).
-%%
-%%
-%%has_flush_false_test() ->
-%%  Cards = [
-%%    <<"Ah">>,
-%%    <<"2d">>, % not a heart
-%%    <<"5h">>,
-%%    <<"Kh">>,
-%%    <<"Qh">>
-%%  ],
-%%  ?assertNot(ranker:has_flush(Cards)).
+
 %%
 %%
 %%has_straight_true_test() ->
