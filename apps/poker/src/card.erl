@@ -7,21 +7,43 @@
 -module(card).
 -author("Aaron Lelevier").
 -vsn(1.0).
+-include("poker.hrl").
 -export([]).
 -compile(export_all).
 
+%%%===================================================================
+%% Card
+%%%===================================================================
+%%-spec init(card()) -> #card{}.
+init(Value) ->
+  #card{
+    value = Value,
+    rank = rank(Value),
+    int_rank = rank_value(Value),
+    suit = suit(Value)
+  }.
+
+%%%===================================================================
+%% v1
+%%%===================================================================
 
 %% @doc Returns a Poker Hand
 -spec hand(binary(), binary()) -> [binary()].
 hand(Card1, Card2) ->
   [Card1, Card2].
 
-
 %% @doc Returns the 'Card' rank
 %% ex: Card <<"As">> returns <<"A">>
 -spec rank(binary()) -> binary().
 rank(Card) ->
   binary:part(Card, {0, 1}).
+
+
+%% @doc Returns the 'Card' suit
+%% ex: Card <<"As">> returns <<"s">>
+-spec suit(binary()) -> binary().
+suit(Card) ->
+  binary:part(Card, {1, 1}).
 
 
 %% @doc Returns the integer value of the Card rank
@@ -34,45 +56,20 @@ rank_value(Card) ->
 -spec rank_to_value_map() -> #{string() => integer()}.
 rank_to_value_map() ->
   #{
-    <<"2">> => 2,
-    <<"3">> => 3,
-    <<"4">> => 4,
-    <<"5">> => 5,
-    <<"6">> => 6,
-    <<"7">> => 7,
-    <<"8">> => 8,
-    <<"9">> => 9,
-    <<"T">> => 10,
-    <<"J">> => 11,
-    <<"Q">> => 12,
-    <<"K">> => 13,
-    <<"A">> => 14
+    <<"2">> => [2],
+    <<"3">> => [3],
+    <<"4">> => [4],
+    <<"5">> => [5],
+    <<"6">> => [6],
+    <<"7">> => [7],
+    <<"8">> => [8],
+    <<"9">> => [9],
+    <<"T">> => [10],
+    <<"J">> => [11],
+    <<"Q">> => [12],
+    <<"K">> => [13],
+    <<"A">> => [1, 14]
   }.
-
-%% @doc A mapping from integer values to Card rank
--spec value_to_rank_map() -> #{string() => integer()}.
-value_to_rank_map() ->
-  #{
-    2 => <<"2">>,
-    3 => <<"3">>,
-    4 => <<"4">>,
-    5 => <<"5">>,
-    6 => <<"6">>,
-    7 => <<"7">>,
-    8 => <<"8">>,
-    9 => <<"9">>,
-    10 => <<"T">>,
-    11 => <<"J">>,
-    12 => <<"Q">>,
-    13 => <<"K">>,
-    14 => <<"A">>
-  }.
-
-%% @doc Returns the 'Card' suit
-%% ex: Card <<"As">> returns <<"s">>
--spec suit(binary()) -> binary().
-suit(Card) ->
-  binary:part(Card, {1, 1}).
 
 
 %% @doc Returns a random 'Card' from the default list of all 'Cards'

@@ -37,35 +37,35 @@
 %%  ?assertEqual(Cards, maps:get(all_cards, Ret)).
 
 
-has_N_of_a_kind_test() ->
-  Cards = [
-    <<"Ah">>,
-    <<"Ad">>,
-    <<"Ac">>,
-    <<"As">>,
-    <<"Qh">>
-  ],
-  Sorted = ranker:desc_rank_values(Cards),
-
-  {IsExpectedHand, HandCards} = ranker:has_N_of_a_kind(Sorted, 4, length(Sorted)),
-
-  ?assertEqual(true, IsExpectedHand),
-  ?assertEqual([], HandCards).
-
-
-has_4_of_a_kind_true_test() ->
-  Cards = [
-    <<"Ah">>,
-    <<"Ad">>,
-    <<"Ac">>,
-    <<"As">>,
-    <<"Qh">>
-  ],
-
-  {IsExpectedHand, Hand} = ranker:has_4_of_a_kind(Cards),
-
-  ?assertEqual(true, IsExpectedHand),
-  ?assertEqual(four_of_a_kind, hand:rank(Hand)).
+%%has_N_of_a_kind_test() ->
+%%  Cards = [
+%%    <<"Ah">>,
+%%    <<"Ad">>,
+%%    <<"Ac">>,
+%%    <<"As">>,
+%%    <<"Qh">>
+%%  ],
+%%  Sorted = ranker:desc_rank_values(Cards),
+%%
+%%  {IsExpectedHand, HandCards} = ranker:has_N_of_a_kind(Sorted, 4, length(Sorted)),
+%%
+%%  ?assertEqual(true, IsExpectedHand),
+%%  ?assertEqual([], HandCards).
+%%
+%%
+%%has_4_of_a_kind_true_test() ->
+%%  Cards = [
+%%    <<"Ah">>,
+%%    <<"Ad">>,
+%%    <<"Ac">>,
+%%    <<"As">>,
+%%    <<"Qh">>
+%%  ],
+%%
+%%  {IsExpectedHand, Hand} = ranker:has_4_of_a_kind(Cards),
+%%
+%%  ?assertEqual(true, IsExpectedHand),
+%%  ?assertEqual(four_of_a_kind, hand:rank(Hand)).
 
 
 %%has_4_of_a_kind_false_test() ->
