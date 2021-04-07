@@ -17,10 +17,14 @@ has_flush_true_test() ->
     <<"Qh">>
   ],
 
-  {IsFlush, HandName} = ranker:has_flush(Cards),
+  {IsFlush, Map} = ranker:has_flush(Cards),
 
   ?assertEqual(true, IsFlush),
-  ?assertEqual(flush, HandName).
+  ?assertEqual(flush, maps:get(hand, Map)),
+  % TODO: needs to be the sorted descending list of flush cards
+  ?assertEqual(Cards, maps:get(cards, Map)).
+
+%% TODO: if we have more than 5 cards that make a flush, we should get the best 5 flush cards
 
 
 has_flush_false_test() ->
@@ -32,10 +36,12 @@ has_flush_false_test() ->
     <<"Qh">>
   ],
 
-  {IsFlush, HandName} = ranker:has_flush(Cards),
+  {IsFlush, Map} = ranker:has_flush(Cards),
 
   ?assertEqual(false, IsFlush),
-  ?assertEqual(undefined, HandName).
+  ?assertEqual(undefined, maps:get(hand, Map)),
+  % TODO: needs to be the sorted descending list of flush cards
+  ?assertEqual([], maps:get(cards, Map)).
 
 
 %%has_4_of_a_kind_true_test() ->
